@@ -15,8 +15,7 @@
 ```
 easyrsa
 '---- EasyRSA()
-    |---- gen_private_key()
-    |---- gen_public_key()
+    |---- gen_key_pair()
     |---- encrypt()
     |---- decrypt()
     |---- sign()
