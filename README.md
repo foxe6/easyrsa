@@ -45,14 +45,9 @@ print(EasyRSA(private_key=kp["private_key"]).max_msg_size())
 from base64 import b64encode
 symmetric_key = "abc" or b"abc" or b64encode(b"abc")
 encrypted_key = EasyRSA(public_key=kp["public_key"]).encrypt(symmetric_key)
-key_in_b64 = b64encode(encrypted_key).decode("utf-8")
 print(encrypted_key)
 # ...
-print(key_in_b64)
-# ...
 print(symmetric_key == EasyRSA(private_key=kp["private_key"]).decrypt(encrypted_key))
-# True
-print(symmetric_key == EasyRSA(private_key=kp["private_key"]).decrypt(key_in_b64))
 # True
 
 # sign and verify
