@@ -19,7 +19,8 @@ easyrsa
     |---- encrypt()
     |---- decrypt()
     |---- sign()
-    '---- verify()
+    |---- verify()
+    '---- max_msg_size()
 ```
 
 # Example
@@ -29,13 +30,18 @@ easyrsa
 from easyrsa import *
 
 # generate a key pair
-kp = EasyRSA(bits=512*2).gen_key_pair()
+kp = EasyRSA(bits=1024).gen_key_pair()
 print(kp)
 # {"public_key": b"...", "private_key": b"..."}
 
+# maximum message size encrypted with a n bits RSA key
+print(EasyRSA(public_key=kp["public_key"]).max_msg_size())
+# 86
+print(EasyRSA(private_key=kp["private_key"]).max_msg_size())
+# 86
+
 # encryption and decryption
 # note that each EasyRSA object must bind only one operation
-# EasyRSA fails to operate if more than one argument are passed in
 from base64 import b64encode
 symmetric_key = "abc" or b"abc" or b64encode(b"abc")
 encrypted_key = EasyRSA(public_key=kp["public_key"]).encrypt(symmetric_key)
@@ -55,13 +61,4 @@ s = EasyRSA(private_key=kp["private_key"]).sign(msg)
 # and then somehow you receive the msg
 print(EasyRSA(public_key=kp["public_key"]).verify(msg, s))
 # True
-```
-
-## shell
-```shell script
-rem easyrsa.exe {private key in base64|public key in base64} {base64 string to decrypt|symmetric key to encrypt}
-easyrsa.exe <private key in base64> <base64 string to decrypt>
-rem decryption returns string
-easyrsa.exe <public key in base64> <symmetric key to encrypt>
-rem encryption returns string in b64
 ```

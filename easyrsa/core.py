@@ -27,8 +27,22 @@ class EasyRSA(object):
                 private_key=self.key.export_key(),
                 public_key=self.key.publickey().export_key()
             )
+        except Exception as e:
+            raise e
         finally:
             self.key = None
+
+    def max_msg_size(self) -> int:
+        try:
+            if self.public_key:
+                return RSA.import_key(self.public_key).n.bit_length()//8-42
+            elif self.private_key:
+                return RSA.import_key(self.private_key).n.bit_length()//8-42
+        except Exception as e:
+            raise e
+        finally:
+            self.private_key = None
+            self.public_key = None
 
     def encrypt(self, v: str_or_bytes) -> bytes:
         if isinstance(self.public_key, str):
@@ -36,11 +50,9 @@ class EasyRSA(object):
         v = try_utf8e(v)
         return PKCS1_OAEP.new(RSA.import_key(self.public_key)).encrypt(v)
 
-    def decrypt(self, v: str_or_bytes) -> str_or_bytes:
+    def decrypt(self, v: bytes) -> str_or_bytes:
         if isinstance(self.private_key, str):
             self.private_key = b64d(self.private_key)
-        if isinstance(v, str):
-            v = b64d(v)
         v = PKCS1_OAEP.new(RSA.import_key(self.private_key)).decrypt(v)
         return try_utf8d(v)
 
