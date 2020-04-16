@@ -34,7 +34,7 @@ kp = EasyRSA(bits=1024).gen_key_pair()
 print(kp)
 # {"public_key": b"...", "private_key": b"..."}
 
-# maximum message size encrypted with a n bits RSA key
+# maximum message size in bytes encrypted with a n bits RSA key
 print(EasyRSA(public_key=kp["public_key"]).max_msg_size())
 # 86
 print(EasyRSA(private_key=kp["private_key"]).max_msg_size())
