@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-from importlib import import_module
 import os
 import re
 
@@ -13,15 +12,14 @@ badges = """[![version](https://img.shields.io/pypi/v/<name>.svg)](https://pypi.
 """
 name = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
 badges = re.sub(r"<name>", name, badges)
-locals()[name] = import_module(name)
 readme = open("README.md").read()
 readme = re.sub(r"(<badges>).*?(</badges>)", rf"\g<1>{badges}\g<2>", readme, flags=re.DOTALL)
 open("README.md", "wb").write(readme.encode("utf-8"))
 description = re.search(r"<i>(.*?)</i>", readme)[1]
 setup(
     name="easyrsa",
-    version=locals()[name].version,
-    keywords=locals()[name].keywords,
+    version="0.4.0",
+    keywords=["easy rsa"],
     packages=find_packages(),
     url="https://github.com/foxe6/easyrsa",
     license="AGPL-3.0",
@@ -40,5 +38,5 @@ setup(
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "Operating System :: Microsoft :: Windows :: Windows 10"
     ],
-    entry_points=dict(console_scripts=[name+"="+name+"."+locals()[name].entry])
+    entry_points=dict(console_scripts=[name+"="+name+"."+"test:main"])
 )
