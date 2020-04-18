@@ -2,7 +2,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA3_512
 from Crypto.Signature import PKCS1_v1_5
-from omnitools import str_or_bytes, b64e, b64d, try_utf8d, try_utf8e, bytes_or_tuple
+from omnitools import str_or_bytes, b64e, b64d, try_utf8d, try_utf8e, jl, jd_and_utf8e, utf8d, bytes_or_list
 
 
 __ALL__ = ["EasyRSA"]
@@ -44,7 +44,7 @@ class EasyRSA(object):
             self.private_key = None
             self.public_key = None
 
-    def encrypt(self, v: str_or_bytes) -> bytes_or_tuple:
+    def encrypt(self, v: str_or_bytes) -> bytes:
         if len(try_utf8e(v)) > EasyRSA(public_key=self.public_key).max_msg_size():
             return self.encryptlong(v)
         if isinstance(self.public_key, str):
@@ -52,23 +52,25 @@ class EasyRSA(object):
         v = try_utf8e(v)
         return PKCS1_OAEP.new(RSA.import_key(self.public_key)).encrypt(v)
 
-    def encryptlong(self, v: str_or_bytes) -> tuple:
+    def encryptlong(self, v: str_or_bytes) -> bytes:
         max_msg_size = EasyRSA(public_key=self.public_key).max_msg_size()
         parts = []
         while v:
             parts.append(b64e(self.encrypt(v[:max_msg_size])))
             v = v[max_msg_size:]
-        return tuple(parts)
+        return jd_and_utf8e(parts)
 
-    def decrypt(self, v: bytes_or_tuple) -> str_or_bytes:
-        if isinstance(v, tuple):
-            return self.decryptlong(v)
+    def decrypt(self, v: bytes) -> str_or_bytes:
+        try:
+            return self.decryptlong(jl(utf8d(v)))
+        except:
+            pass
         if isinstance(self.private_key, str):
             self.private_key = b64d(self.private_key)
         v = PKCS1_OAEP.new(RSA.import_key(self.private_key)).decrypt(v)
         return try_utf8d(v)
 
-    def decryptlong(self, parts: tuple) -> str_or_bytes:
+    def decryptlong(self, parts: bytes_or_list) -> str_or_bytes:
         v = []
         for part in parts:
             v.append(self.decrypt(b64d(part)))

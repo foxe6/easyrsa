@@ -43,7 +43,7 @@ print(EasyRSA(private_key=kp["private_key"]).max_msg_size())
 # encryption and decryption
 # note that each EasyRSA object must bind only one operation
 from base64 import b64encode
-symmetric_key = "abc" or b"abc" or b64encode(b"abc")
+symmetric_key = "abc" or b"abc"*100 or b64encode(b"abc")
 encrypted_key = EasyRSA(public_key=kp["public_key"]).encrypt(symmetric_key)
 print(encrypted_key)
 # ...
@@ -51,7 +51,7 @@ print(symmetric_key == EasyRSA(private_key=kp["private_key"]).decrypt(encrypted_
 # True
 
 # sign and verify
-msg = randb(1024)
+msg = "encrypted"
 s = EasyRSA(private_key=kp["private_key"]).sign(msg)
 # and then somehow you receive the msg
 print(EasyRSA(public_key=kp["public_key"]).verify(msg, s))

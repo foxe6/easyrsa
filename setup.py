@@ -18,7 +18,7 @@ open("README.md", "wb").write(readme.encode("utf-8"))
 description = re.search(r"<i>(.*?)</i>", readme)[1]
 setup(
     name="easyrsa",
-    version="0.6.0",
+    version="0.7.0",
     keywords=["easy rsa"],
     packages=find_packages(),
     url="https://github.com/foxe6/easyrsa",
