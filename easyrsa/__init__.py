@@ -1,6 +1,5 @@
-__version__ = "0.5.2"
+__version__ = "0.5.3"
 __keywords__ = ["easy rsa"]
-__entry__ = "test:main"
 
 
 if not __version__.endswith(".0"):

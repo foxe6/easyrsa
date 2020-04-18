@@ -2,7 +2,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA3_512
 from Crypto.Signature import PKCS1_v1_5
-from omnitools import *
+from omnitools import str_or_bytes, b64d, try_utf8d, try_utf8e
 
 
 __ALL__ = ["EasyRSA"]
